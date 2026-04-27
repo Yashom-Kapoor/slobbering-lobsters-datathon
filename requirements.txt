@@ -56,6 +56,7 @@ MarkupSafe==3.0.3
 matplotlib==3.10.9
 matplotlib-inline==0.2.1
 mistune==3.2.0
+narwhals==2.20.0
 nbclient==0.10.4
 nbconvert==7.17.1
 nbformat==5.10.4
@@ -67,9 +68,12 @@ packaging==26.2
 pandas==3.0.2
 pandocfilters==1.5.1
 parso==0.8.6
+patsy==1.0.2
 pexpect==4.9.0
 pillow==12.2.0
 platformdirs==4.9.6
+plotly==6.7.0
+plotly-express==0.4.1
 prometheus_client==0.25.0
 prompt_toolkit==3.0.52
 psutil==7.2.2
@@ -95,6 +99,7 @@ setuptools==82.0.1
 six==1.17.0
 soupsieve==2.8.3
 stack-data==0.6.3
+statsmodels==0.14.6
 terminado==0.18.1
 threadpoolctl==3.6.0
 tinycss2==1.4.0
