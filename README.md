@@ -6,7 +6,14 @@
 Webapp dashboard
 
 `/data`\
-Raw or processed data
+Raw or processed data\
+Download data here: https://drive.google.com/drive/folders/1vkR6GsZSPHOF6Xa5_PhFMmOeUBwXuY4J?usp=drive_link\
+OCED-Dataset.csv: 
+- Original, raw dataset
+
+clean_year_region.csv:
+- Year column cleaned (year ranges, eg. 2020-2023, split into separate years with funding evenly distributed across 4 years)
+- Region column cleaned(region ranges, eg. West Africa; Americas; Caribbean) split into separate regions with funding evenly distributed across all regions
 
 `/notebooks`\
 Jupyter Notebook files for scratch work
