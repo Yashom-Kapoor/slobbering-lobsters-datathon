@@ -1,4 +1,4 @@
-./venv/
-./data/
-./agents/
-./skills/
+venv/
+data/
+agents/
+skills/
