@@ -32,3 +32,13 @@ When running notebooks, click Select Kernel and choose "datathon-env".
 
 ### Adding new packages
 Ensure you run `pip freeze > requirements.txt` to update requirements.txt if you add new packages.
+
+### Notebooks Documentation
+clean_year_region: 
+- Year column cleaned (year ranges, eg. 2020-2023, split into separate years with funding evenly distributed across 4 years)
+- Region column cleaned(region ranges, eg. West Africa; Americas; Caribbean) split into separate regions with funding evenly distributed across all regions
+
+funding_region_and_year:
+- Currently:   
+    - Combined all years
+    - Created plotly map across 4 arbitrary countries measuring funding
