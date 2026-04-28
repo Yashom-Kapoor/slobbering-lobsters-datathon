@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDG Dashboard — Brand & UX Innovation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:      #0f172a;
+      --surface: #1e293b;
+      --border:  #334155;
+      --text:    #e2e8f0;
+      --muted:   #94a3b8;
+      --accent:  #38bdf8;
+      --c1: #164e63;
+      --c2: #0e7490;
+      --c3: #0891b2;
+      --c4: #06b6d4;
+      --c5: #67e8f9;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: auto; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── Cursor ── */
+    #cursor {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+      transition: width .2s, height .2s, background .2s;
+    }
+    #cursor.hover {
+      width: 56px;
+      height: 56px;
+      background: rgba(56,189,248,.08);
+    }
+    #cursor-dot {
+      position: fixed;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+
+    /* ── Nav ── */
+    #nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 52px;
+    }
+
+    .wordmark {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      color: var(--text);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .wordmark svg { display: block; }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 36px;
+    }
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      position: relative;
+      padding-bottom: 2px;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+
+    /* ── Section 1: Hero ── */
+    #hero {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 52px 80px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 110% 70% at 10% 20%, var(--c5) 0%, transparent 45%),
+        radial-gradient(ellipse 70% 100% at 90% 80%, var(--c4) 0%, transparent 45%),
+        radial-gradient(ellipse 90% 80% at 55% 40%, var(--c3) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 70% at 20% 85%, var(--c2) 0%, transparent 50%),
+        radial-gradient(ellipse 80% 60% at 80% 10%, var(--c2) 0%, transparent 50%),
+        var(--c1);
+    }
+
+    .hero-glow-a {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: radial-gradient(ellipse 60% 50% at 30% 30%, rgba(103,232,249,.18) 0%, transparent 60%);
+      animation: silkA 11s ease-in-out infinite alternate;
+    }
+    .hero-glow-b {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: radial-gradient(ellipse 50% 60% at 75% 65%, rgba(6,182,212,.2) 0%, transparent 60%);
+      animation: silkB 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes silkA {
+      from { transform: translate(0, 0) scale(1); opacity: 1; }
+      to   { transform: translate(3%, 5%) scale(1.08); opacity: .7; }
+    }
+    @keyframes silkB {
+      from { transform: translate(0, 0) scale(1); opacity: .8; }
+      to   { transform: translate(-4%, -3%) scale(1.1); opacity: 1; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 980px;
+    }
+
+    .hero-headline {
+      font-size: clamp(36px, 6.5vw, 90px);
+      font-weight: 300;
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      opacity: 0.92;
+    }
+
+    /* each char wrapped by our splitter */
+    .char {
+      display: inline-block;
+      will-change: transform, opacity;
+    }
+    .word { display: inline-block; overflow: hidden; }
+
+    /* ── Section 2: Capability ── */
+    #section2 {
+      position: relative;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 52px;
+      gap: 60px;
+    }
+
+    .section2-left {
+      flex: 0 0 55%;
+      display: flex;
+      flex-direction: column;
+      gap: 64px;
+    }
+
+    .capability-headline {
+      font-size: clamp(28px, 4.2vw, 58px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      max-width: 680px;
+    }
+
+    .clients-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .client-logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 36px 44px;
+      align-items: center;
+    }
+
+    .client-logos span {
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      opacity: 0.45;
+      text-transform: uppercase;
+    }
+
+    .section2-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 600px;
+    }
+
+    #particle-canvas {
+      display: block;
+      width: 560px;
+      height: 560px;
+      max-width: 100%;
+    }
+
+    /* ── Divider ── */
+    .section-rule {
+      width: 48px;
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 0;
+    }
+
+    /* ── Scroll hint ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      right: 52px;
+      z-index: 2;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0.5;
+      writing-mode: vertical-rl;
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-glow-a, .hero-glow-b { animation: none; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+      #nav { padding: 20px 24px; }
+      #hero { padding: 0 24px 60px; }
+      #section2 { flex-direction: column; padding: 80px 24px; }
+      .section2-left { flex: none; }
+      .section2-right { min-height: 400px; width: 100%; }
+      .nav-links { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div id="cursor"></div>
+  <div id="cursor-dot"></div>
+
+  <!-- Nav -->
+  <nav id="nav">
+    <!-- Chain-link wordmark -->
+    <div class="wordmark">
+      SDG Dashboard
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="/">Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <!-- Section 1: Hero -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-glow-a"></div>
+    <div class="hero-glow-b"></div>
+    <div class="hero-content">
+      <h1 class="hero-headline" id="headline">
+        Interactive SDG aid tracker dashboard by team slobbering lobsters 
+      </h1>
+    </div>
+    <div class="scroll-hint">Scroll</div>
+  </section>
+
+  <!-- Section 2: Capability -->
+  <section id="section2">
+    <div class="section2-left">
+      <h2 class="capability-headline" id="cap-headline">
+        Combining technical skill with formal design expertise for sleek, informative product.
+      </h2>
+    </div>
+    <div class="section2-right">
+      <canvas id="particle-canvas"></canvas>
+    </div>
+  </section>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Observer.min.js"></script>
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <!-- Lenis -->
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+  <script>
+  (() => {
+    // ── Reduced motion check ──
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ── Lenis smooth scroll ──
+    const lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    gsap.registerPlugin(ScrollTrigger, Observer);
+
+    // ── Custom cursor ──
+    const cursor    = document.getElementById('cursor');
+    const cursorDot = document.getElementById('cursor-dot');
+    const moveCursor    = gsap.quickTo(cursor,    'x', { duration: 0.55, ease: 'power3.out' });
+    const moveCursorY   = gsap.quickTo(cursor,    'y', { duration: 0.55, ease: 'power3.out' });
+    const moveDot       = gsap.quickTo(cursorDot, 'x', { duration: 0.12, ease: 'power3.out' });
+    const moveDotY      = gsap.quickTo(cursorDot, 'y', { duration: 0.12, ease: 'power3.out' });
+
+    window.addEventListener('mousemove', (e) => {
+      moveCursor(e.clientX); moveCursorY(e.clientY);
+      moveDot(e.clientX);    moveDotY(e.clientY);
+    });
+
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+
+    // ── Lightweight SplitText ──
+    function splitChars(el) {
+      const rawText = el.textContent.trim();
+      el.textContent = '';
+      const allChars = [];
+      rawText.split(' ').forEach((word, wi, arr) => {
+        const wordEl = document.createElement('span');
+        wordEl.classList.add('word');
+        word.split('').forEach(ch => {
+          const span = document.createElement('span');
+          span.classList.add('char');
+          span.textContent = ch;
+          wordEl.appendChild(span);
+          allChars.push(span);
+        });
+        el.appendChild(wordEl);
+        if (wi < arr.length - 1) el.appendChild(document.createTextNode(' '));
+      });
+      return allChars;
+    }
+
+    function splitWords(el) {
+      const rawText = el.textContent.trim();
+      el.textContent = '';
+      const allWords = [];
+      rawText.split(' ').forEach((word, wi, arr) => {
+        const wordEl = document.createElement('span');
+        wordEl.classList.add('char');
+        wordEl.style.display = 'inline-block';
+        wordEl.textContent = word;
+        el.appendChild(wordEl);
+        if (wi < arr.length - 1) el.appendChild(document.createTextNode(' '));
+        allWords.push(wordEl);
+      });
+      return allWords;
+    }
+
+    // ── Nav hover underlines ──
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        gsap.to(link, { color: 'var(--accent)', duration: 0.2 });
+        gsap.to(link.querySelector('::after') || link, {});
+        gsap.fromTo(link, { '--ul': 0 }, {});
+        // use ::after via direct element pseudo-trick
+        const after = link;
+        gsap.to(after, { duration: 0.25, ease: 'power2.inOut',
+          onStart() {
+            after.style.setProperty('color', 'var(--accent)');
+            after.style.setProperty('--scale', '1');
+          }
+        });
+        gsap.to(link.querySelectorAll('*') || [], {});
+        // Animate the pseudo underline via a real elem trick:
+        if (!link._line) {
+          const line = document.createElement('span');
+          line.style.cssText = `
+            position:absolute; bottom:-1px; left:0; width:100%; height:1px;
+            background:var(--accent); transform:scaleX(0); transform-origin:left;
+            pointer-events:none;
+          `;
+          link.style.position = 'relative';
+          link.appendChild(line);
+          link._line = line;
+        }
+        gsap.to(link._line, { scaleX: 1, duration: 0.3, ease: 'power2.inOut' });
+        gsap.to(link, { color: 'var(--accent)', duration: 0.25 });
+      });
+      link.addEventListener('mouseleave', () => {
+        gsap.to(link._line, { scaleX: 0, duration: 0.25, ease: 'power2.inOut' });
+        gsap.to(link, { color: 'var(--muted)', duration: 0.25 });
+      });
+    });
+
+    // ── Page load timeline ──
+    const headlineEl = document.getElementById('headline');
+    const chars = splitChars(headlineEl);
+
+    const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+
+    // Nav entrance
+    tl.from('#nav', { y: -30, opacity: 0, duration: 1, ease: 'power3.out' }, 0);
+
+    // Headline chars stagger
+    if (!prefersReduced) {
+      tl.from(chars, {
+        y: 60,
+        opacity: 0,
+        duration: 1.1,
+        stagger: 0.028,
+        ease: 'expo.out',
+      }, 0.3);
+    } else {
+      tl.from(headlineEl, { opacity: 0, duration: 0.4 }, 0.3);
+    }
+
+    // Scroll hint
+    tl.from('.scroll-hint', { opacity: 0, duration: 1 }, 1.2);
+
+    // ── Hero scroll pin + fade ──
+    if (!prefersReduced) {
+      ScrollTrigger.create({
+        trigger: '#hero',
+        start: 'top top',
+        end: '+=40%',
+        pin: true,
+        pinSpacing: false,
+        scrub: 1,
+      });
+
+      gsap.to('.hero-content', {
+        scale: 0.94,
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#hero',
+          start: 'top top',
+          end: '+=35%',
+          scrub: true,
+        },
+      });
+
+      gsap.to('.hero-bg, .hero-glow-a, .hero-glow-b', {
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#section2',
+          start: 'top 80%',
+          end: 'top 20%',
+          scrub: true,
+        },
+      });
+    }
+
+    // ── Capability headline split reveal ──
+    const capEl = document.getElementById('cap-headline');
+    const capWords = splitWords(capEl);
+
+    gsap.from(capWords, {
+      y: 40,
+      opacity: 0,
+      duration: 0.9,
+      stagger: 0.06,
+      ease: 'expo.out',
+      scrollTrigger: {
+        trigger: capEl,
+        start: 'top 75%',
+      },
+    });
+
+    // ── Client logos stagger ──
+    const logos = document.querySelectorAll('.client-logos span');
+    gsap.from(logos, {
+      y: 20,
+      opacity: 0,
+      duration: 0.7,
+      stagger: 0.08,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '#client-logos',
+        start: 'top 80%',
+      },
+    });
+
+    // ── Mouse parallax (Observer) ──
+    let mouseX = 0, mouseY = 0;
+    const moveHeroA = gsap.quickTo('.hero-glow-a', 'x', { duration: 2.5, ease: 'power1.out' });
+    const moveHeroAY = gsap.quickTo('.hero-glow-a', 'y', { duration: 2.5, ease: 'power1.out' });
+    const moveHeroB = gsap.quickTo('.hero-glow-b', 'x', { duration: 3.2, ease: 'power1.out' });
+    const moveHeroBY = gsap.quickTo('.hero-glow-b', 'y', { duration: 3.2, ease: 'power1.out' });
+
+    window.addEventListener('mousemove', (e) => {
+      const nx = (e.clientX / window.innerWidth  - 0.5) * 2;
+      const ny = (e.clientY / window.innerHeight - 0.5) * 2;
+      moveHeroA(nx * 30); moveHeroAY(ny * 20);
+      moveHeroB(nx * -20); moveHeroBY(ny * -15);
+    });
+
+    // ─────────────────────────────────────────────────
+    // ── Three.js Particle Globe ──
+    // ─────────────────────────────────────────────────
+    const canvas = document.getElementById('particle-canvas');
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(560, 560);
+    renderer.setClearColor(0x000000, 0);
+
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 100);
+    camera.position.set(0, 0, 4.2);
+
+    const globe  = new THREE.Group();
+    scene.add(globe);
+
+    const c3  = new THREE.Color('#0891b2');
+    const c5  = new THREE.Color('#67e8f9');
+    const acc = new THREE.Color('#38bdf8');
+    const GLOBE_R = 1.5;
+
+    function makePoints(positions, colors, size) {
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+      geo.setAttribute('color',    new THREE.BufferAttribute(new Float32Array(colors),    3));
+      const mat = new THREE.PointsMaterial({
+        size,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.9,
+        sizeAttenuation: true,
+        depthWrite: false,
+      });
+      return new THREE.Points(geo, mat);
+    }
+
+    // ── 1. Surface scatter — Fibonacci sphere ──
+    const SURF_N = 4800;
+    const golden = Math.PI * (3 - Math.sqrt(5));
+    const surfPos = [], surfCol = [];
+    for (let i = 0; i < SURF_N; i++) {
+      const yt  = 1 - (i / (SURF_N - 1)) * 2;
+      const r   = Math.sqrt(Math.max(0, 1 - yt * yt));
+      const phi = golden * i;
+      const jit = 0.018;
+      surfPos.push(
+        (r * Math.cos(phi) + (Math.random() - .5) * jit) * GLOBE_R,
+        (yt                + (Math.random() - .5) * jit) * GLOBE_R,
+        (r * Math.sin(phi) + (Math.random() - .5) * jit) * GLOBE_R
+      );
+      const col = c3.clone().lerp(c5, (yt + 1) / 2);
+      if (Math.random() < 0.05) col.lerp(acc, 0.8);
+      surfCol.push(col.r, col.g, col.b);
+    }
+    globe.add(makePoints(surfPos, surfCol, 0.035));
+
+    // ── 2. Latitude rings ──
+    const latPos = [], latCol = [];
+    for (let li = 0; li < 10; li++) {
+      const lat = -Math.PI / 2 + Math.PI * (li + 1) / 11;
+      const ry  = Math.sin(lat) * GLOBE_R;
+      const rr  = Math.cos(lat) * GLOBE_R;
+      const col = c3.clone().lerp(c5, (Math.sin(lat) + 1) / 2);
+      for (let j = 0; j < 180; j++) {
+        const theta = (j / 180) * Math.PI * 2;
+        latPos.push(Math.cos(theta) * rr, ry, Math.sin(theta) * rr);
+        latCol.push(col.r, col.g, col.b);
+      }
+    }
+    globe.add(makePoints(latPos, latCol, 0.022));
+
+    // ── 3. Longitude arcs ──
+    const lonPos = [], lonCol = [];
+    for (let li = 0; li < 12; li++) {
+      const lon = (li / 12) * Math.PI * 2;
+      for (let j = 0; j < 120; j++) {
+        const lat    = -Math.PI / 2 + Math.PI * (j / 119);
+        const cosLat = Math.cos(lat);
+        lonPos.push(Math.cos(lon) * cosLat * GLOBE_R, Math.sin(lat) * GLOBE_R, Math.sin(lon) * cosLat * GLOBE_R);
+        const col = c3.clone().lerp(c5, j / 119);
+        lonCol.push(col.r, col.g, col.b);
+      }
+    }
+    globe.add(makePoints(lonPos, lonCol, 0.018));
+
+    // ── Scroll-driven Y rotation ──
+    ScrollTrigger.create({
+      trigger: '#section2',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true,
+      onUpdate(self) {
+        globe.rotation.y = self.progress * Math.PI * 1.2;
+      },
+    });
+
+    // ── Mouse parallax ──
+    let targetRotX = 0, targetRotY = 0;
+    let currRotX   = 0, currRotY   = 0;
+    window.addEventListener('mousemove', (e) => {
+      targetRotY = (e.clientX / window.innerWidth  - 0.5) *  0.5;
+      targetRotX = (e.clientY / window.innerHeight - 0.5) * -0.3;
+    });
+
+    // ── Render loop ──
+    let autoY = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      autoY += 0.0018;
+      currRotX += (targetRotX - currRotX) * 0.05;
+      currRotY += (targetRotY - currRotY) * 0.05;
+      globe.rotation.y = autoY + currRotY;
+      if (!prefersReduced) globe.rotation.x = currRotX;
+      renderer.render(scene, camera);
+    }
+    animate();
+  })();
+  </script>
+</body>
+</html>
