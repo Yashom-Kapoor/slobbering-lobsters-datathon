@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Global Aid Flows 2020–2023</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="src/css/main.css"/>
+</head>
+<body>
+
+  <!-- Loading overlay -->
+  <div id="loading">
+    <div class="loader-ring"></div>
+    <div class="loader-text">Loading map data…</div>
+  </div>
+
+  <div id="app" style="visibility:hidden">
+
+    <!-- Header: title, year selector, play, search -->
+    <header id="header">
+      <h1>Global Aid Flows</h1>
+      <div class="year-pills">
+        <button class="yr-btn active" data-yr="all">All</button>
+        <button class="yr-btn"        data-yr="2020">2020</button>
+        <button class="yr-btn"        data-yr="2021">2021</button>
+        <button class="yr-btn"        data-yr="2022">2022</button>
+        <button class="yr-btn"        data-yr="2023">2023</button>
+      </div>
+      <button id="play-btn">▶ Play</button>
+      <div id="search-wrap">
+        <input id="search" type="text" placeholder="Search country…" autocomplete="off"/>
+        <div id="search-results"></div>
+      </div>
+      <nav>
+        <a href="landing.html">Back To Home Page</a>
+      </nav>
+    </header>
+
+    <!-- Map + insight panel -->
+    <div id="main">
+      <div id="map"></div>
+
+      <aside id="panel">
+        <div class="panel-section">
+          <div class="panel-label">Overview</div>
+          <div class="stat-grid">
+            <div class="stat-box">
+              <div class="stat-val" id="total-val">—</div>
+              <div class="stat-sub">USD Disbursed (M)</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val" id="count-val">—</div>
+              <div class="stat-sub">Grants</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-label">Sectors</div>
+          <div id="sector-chart-wrap"><canvas id="sector-chart"></canvas></div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-label">Top Recipients</div>
+          <ul id="country-list"></ul>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-label">Disbursements Scale (USD M, log)</div>
+          <div class="legend-scale">
+            <span style="font-size:9px;color:var(--muted);white-space:nowrap;margin-right:4px">None</span>
+            <div class="leg-grad"></div>
+          </div>
+          <div class="leg-labels">
+            <span id="leg-min">Low</span>
+            <span id="leg-max">High</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Filter bar -->
+    <div id="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <div class="custom-select" id="sector-cs">
+        <button class="cs-btn" id="sector-cs-btn">
+          <span id="sector-cs-label">All Sectors</span>
+          <span class="cs-arrow">▲</span>
+        </button>
+        <div class="cs-dropdown" id="sector-cs-drop"></div>
+      </div>
+      <button id="reset-btn">Reset View</button>
+    </div>
+
+  </div><!-- /#app -->
+
+  <!-- Third-party globals (must load before the ES module) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+  <!-- App entry point -->
+  <script type="module" src="src/js/main.js"></script>
+
+</body>
+</html>

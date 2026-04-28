@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Slobbering Lobsters — Global Aid Flows</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&family=Oxanium:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="src/css/landing.css"/>
+</head>
+<body>
+
+  <div id="cursor"></div>
+
+  <!-- ── Section 1: Hero ────────────────────────────────────────────────────── -->
+  <section id="hero">
+    <div class="silk-blob" id="blob1"></div>
+    <div class="silk-blob" id="blob2"></div>
+    <div class="silk-blob" id="blob3"></div>
+
+    <nav>
+      <div id="logo">Team Slobbering Lobsters</div>
+      <ul id="nav-links">
+        <li><a href="landing.html">Home<span class="underline"></span></a></li>
+        <li><a href="index.html">The Map<span class="underline"></span></a></li>
+      </ul>
+    </nav>
+
+    <div id="hero-content">
+      <h1 id="hero-headline">
+        Insights and Analytics on global funding. Track category funding trends over time.
+      </h1>
+      <a id="cta" href="index.html">Explore the Map</a>
+    </div>
+  </section>
+
+  <!-- ── Section 2: Capability ──────────────────────────────────────────────── -->
+  <section id="capability">
+    <div id="cap-left">
+      <h2 id="cap-headline">
+        Mapping $39 billion in global aid flows across 136 countries, 2020–2023.
+      </h2>
+
+      <div class="stats-label">Key Statistics</div>
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-num">$39.4B</div>
+          <div class="stat-desc">Total disbursed</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">130K+</div>
+          <div class="stat-desc">Grants tracked</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">136</div>
+          <div class="stat-desc">Countries covered</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">26</div>
+          <div class="stat-desc">Sectors mapped</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="cap-right">
+      <canvas id="globe-canvas"></canvas>
+    </div>
+  </section>
+
+  <!-- Third-party globals (must load before the ES module) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Observer.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+  <!-- App entry point -->
+  <script type="module" src="src/js/landing/main.js"></script>
+
+</body>
+</html>
